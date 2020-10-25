@@ -28,9 +28,9 @@ namespace Application.Services
             _context.SaveChanges();
         }
 
-        public void DeleteTask(Task task)
+        public void DeleteTask(int id)
         {
-            _context.task.Remove(task);
+            _context.task.Remove(FindOne(id));
             _context.SaveChanges();
         }
 

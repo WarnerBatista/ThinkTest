@@ -19,63 +19,60 @@ namespace ThinkTestApi.Controllers
         {
             _taskService = taskService;
         }
-
-        public ICollection<Domain.Entities.Task> Index()
+        [HttpGet]
+        public ICollection<Domain.Entities.Task> Get()
         {
             var lista = _taskService.FindAll();
             return lista;
         }
 
-        //[HttpPost]
-        //public string Create()
-        //{
-        //    try
-        //    {
-        //        Domain.Entities.Task task = new Domain.Entities.Task { Name = "Web Api", IsDone = true };
-        //        _taskService.AddTask(task);
-        //        return "OK";
-        //    }
-        //    catch (Exception e)
-        //    {
+        [HttpPost]
+        public IActionResult Create([FromBody] Domain.Entities.Task task)
+        {
+            try
+            {
+                _taskService.AddTask(task);
+                return StatusCode(200);
+            }
+            catch (Exception e)
+            {
 
-        //    }
-        //    return "Not Ok";
-        //}
+            }
+            return StatusCode(400);
+        }
 
-        //[HttpPost]
-        //public bool Update(Domain.Entities.Task task)
-        //{
-        //    try
-        //    {
-        //        _taskService.UpdateTask(task);
-        //        return true;
-        //    }
-        //    catch (Exception)
-        //    {
+        [HttpPut]
+        public IActionResult Update([FromBody] Domain.Entities.Task task)
+        {
+            try
+            {
+                _taskService.UpdateTask(task);
+                return StatusCode(200);
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //    return false;
-        //}
+            }
+            return StatusCode(400);
+        }
 
-        //[HttpPost]
-        //public bool Delete(Domain.Entities.Task task)
-        //{
-        //    try
-        //    {
-        //        _taskService.DeleteTask(task);
-        //        return true;
-        //    }
-        //    catch (Exception)
-        //    {
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+            try
+            {
+                _taskService.DeleteTask(id);
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //    return false;
-        //}
+            }
+        }
 
-        //public Domain.Entities.Task Details(int id)
-        //{
-        //    Domain.Entities.Task task = _taskService.FindOne(id);
-        //    return task;
-        //}
+        [HttpGet ("{id}")]
+        public Domain.Entities.Task Details(int id)
+        {
+            return _taskService.FindOne(id);
+        }
     }
 }

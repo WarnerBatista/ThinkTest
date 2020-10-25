@@ -18,6 +18,7 @@ namespace ThinkTestApi
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,6 +32,15 @@ namespace ThinkTestApi
             services.AddControllers();
             services.AddDbContext<ThinkTestContext>(options => options.UseSqlServer(Configuration.GetConnectionString("TestDb")).EnableSensitiveDataLogging());
             services.AddScoped<TaskService>();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+                                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,9 +51,11 @@ namespace ThinkTestApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 
